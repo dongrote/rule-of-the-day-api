@@ -1,6 +1,7 @@
 use chrono::{DateTime, Local};
 use crate::models::RulesForLifeCollection;
 use crate::types::RuleForLife;
+use crate::traits::RuleOfTheDay;
 
 pub fn handler(timestamp: DateTime<Local>) -> Result<RuleForLife, warp::http::StatusCode> {
     let collection = RulesForLifeCollection::new();

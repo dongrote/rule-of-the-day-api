@@ -2,6 +2,7 @@ use chrono::{DateTime, Local, Datelike};
 use rand::prelude::*;
 use rand_chacha::ChaCha8Rng;
 use crate::types::RuleForLife;
+use crate::traits::RuleOfTheDay;
 
 pub struct RulesForLifeCollection {
     rules_for_life: Vec<RuleForLife>,
@@ -148,7 +149,10 @@ impl RulesForLifeCollection {
         random_value % self.rules_for_life.len()
     }
 
-    pub fn get_rule_of_the_day(&self, timestamp: DateTime<Local>) -> Result<RuleForLife, String> {
+}
+
+impl RuleOfTheDay for RulesForLifeCollection {
+    fn get_rule_of_the_day(&self, timestamp: DateTime<Local>) -> Result<RuleForLife, String> {
         Ok(self.rules_for_life[self.rule_index_from_ts(timestamp)].clone())
     }
 }

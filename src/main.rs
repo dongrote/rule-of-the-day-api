@@ -6,6 +6,7 @@ use chrono::Local;
 mod handlers;
 mod models;
 mod types;
+mod traits;
 use handlers::rotd;
 use crate::types::RuleForLife;
 
