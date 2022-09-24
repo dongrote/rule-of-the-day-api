@@ -2,13 +2,13 @@ use std::collections::HashMap;
 use std::env;
 use std::net::Ipv4Addr;
 use warp::Filter;
-use chrono::Local;
 mod handlers;
 mod models;
 mod types;
 mod traits;
 use handlers::rotd;
 use crate::types::RuleForLife;
+use chrono::{NaiveDate, Local, Datelike};
 
 #[tokio::main]
 async fn main() {
@@ -17,12 +17,23 @@ async fn main() {
         .and(warp::path("api"))
         .and(warp::path("rotd"))
         .and(warp::query::<HashMap<String, String>>())
-        .map(|_p| match rotd::handler(Local::now()) {
-            Ok(rule) => warp::reply::json(&rule),
-            Err(status_code) => {
-                println!("Got status code from rotd::handler() {}", status_code);
-                warp::reply::json(& RuleForLife { text: "error".into(), number: 0, quotes: vec![] })
-            },
+        .map(|p: HashMap<String, String>| {
+            let local_today = Local::today();
+            let now = NaiveDate::from_ymd(local_today.year(), local_today.month(), local_today.day());
+            let ts = match p.get("date") {
+                Some(date) => match date.parse::<NaiveDate>() {
+                    Ok(parsed_date) => parsed_date,
+                    _ => now,
+                },
+                None => now,
+            };
+            match rotd::handler(ts) {
+                Ok(rule) => warp::reply::json(&rule),
+                Err(status_code) => {
+                    println!("Got status code from rotd::handler() {}", status_code);
+                    warp::reply::json(& RuleForLife { text: "error".into(), number: 0, quotes: vec![] })
+                },
+            }
         });
         /*
         .map(|p: HashMap<String, String>| match p.get("name") {

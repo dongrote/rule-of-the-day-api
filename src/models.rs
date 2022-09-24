@@ -1,4 +1,4 @@
-use chrono::{DateTime, Local, Datelike};
+use chrono::{NaiveDate, Datelike};
 use rand::prelude::*;
 use rand_chacha::ChaCha8Rng;
 use crate::types::RuleForLife;
@@ -136,7 +136,7 @@ impl RulesForLifeCollection {
         }
     }
 
-    fn rule_index_from_ts(&self, timestamp: DateTime<Local>) -> usize {
+    fn rule_index_from_ts(&self, timestamp: NaiveDate) -> usize {
         let seed: u64 = timestamp.year().try_into().unwrap();
         let mut prng = ChaCha8Rng::seed_from_u64(seed);
         let mut random_bytes: Vec<u8> = vec![0; 366];
@@ -152,7 +152,7 @@ impl RulesForLifeCollection {
 }
 
 impl RuleOfTheDay for RulesForLifeCollection {
-    fn get_rule_of_the_day(&self, timestamp: DateTime<Local>) -> Result<RuleForLife, String> {
+    fn get_rule_of_the_day(&self, timestamp: NaiveDate) -> Result<RuleForLife, String> {
         Ok(self.rules_for_life[self.rule_index_from_ts(timestamp)].clone())
     }
 }
@@ -164,7 +164,7 @@ mod tests {
     #[test]
     fn get_rule_of_the_day_works() {
         let collection = RulesForLifeCollection::new();
-        let rule = collection.get_rule_of_the_day(Local::now());
+        let rule = collection.get_rule_of_the_day(NaiveDate::from_ymd(1970,1,1));
         assert!(rule.is_ok());
         let rule = rule.unwrap();
         println!("{}", rule.text);

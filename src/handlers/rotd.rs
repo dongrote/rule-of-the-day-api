@@ -1,9 +1,9 @@
-use chrono::{DateTime, Local};
+use chrono::NaiveDate;
 use crate::models::RulesForLifeCollection;
 use crate::types::RuleForLife;
 use crate::traits::RuleOfTheDay;
 
-pub fn handler(timestamp: DateTime<Local>) -> Result<RuleForLife, warp::http::StatusCode> {
+pub fn handler(timestamp: NaiveDate) -> Result<RuleForLife, warp::http::StatusCode> {
     let collection = RulesForLifeCollection::new();
     match collection.get_rule_of_the_day(timestamp) {
         Ok(rule) => Ok(rule),
