@@ -1,24 +1,7 @@
 use chrono::{DateTime, Local, Datelike};
 use rand::prelude::*;
 use rand_chacha::ChaCha8Rng;
-use serde::Serialize;
-
-#[derive(Serialize)]
-pub struct RuleForLife {
-    pub text: String,
-    pub number: u32,
-    pub quotes: Vec<String>,
-}
-
-impl Clone for RuleForLife {
-    fn clone(&self) -> RuleForLife {
-        RuleForLife {
-            text: self.text.clone(),
-            number: self.number,
-            quotes: self.quotes.clone(),
-        }
-    }
-}
+use crate::types::RuleForLife;
 
 pub struct RulesForLifeCollection {
     rules_for_life: Vec<RuleForLife>,

@@ -1,5 +1,6 @@
 use chrono::{DateTime, Local};
-use crate::models::{RuleForLife, RulesForLifeCollection};
+use crate::models::RulesForLifeCollection;
+use crate::types::RuleForLife;
 
 pub fn handler(timestamp: DateTime<Local>) -> Result<RuleForLife, warp::http::StatusCode> {
     let collection = RulesForLifeCollection::new();

@@ -5,8 +5,9 @@ use warp::Filter;
 use chrono::Local;
 mod handlers;
 mod models;
+mod types;
 use handlers::rotd;
-use models::RuleForLife;
+use crate::types::RuleForLife;
 
 #[tokio::main]
 async fn main() {
