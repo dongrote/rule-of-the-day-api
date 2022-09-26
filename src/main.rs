@@ -10,6 +10,21 @@ use handlers::rotd;
 use crate::types::RuleForLife;
 use chrono::{NaiveDate, Local, Datelike};
 
+fn naive_now() -> NaiveDate {
+    let local_today = Local::today();
+    NaiveDate::from_ymd(local_today.year(), local_today.month(), local_today.day())
+}
+
+fn determine_date(date: Option<&String>) -> NaiveDate {
+    match date {
+        Some(date) => match date.parse::<NaiveDate>() {
+            Ok(parsed_date) => parsed_date,
+            _ => naive_now(),
+        },
+        None => naive_now(),
+    }
+}
+
 #[tokio::main]
 async fn main() {
     const DEFAULT_LISTEN_PORT: u16 = 3000;
@@ -18,15 +33,7 @@ async fn main() {
         .and(warp::path("rotd"))
         .and(warp::query::<HashMap<String, String>>())
         .map(|p: HashMap<String, String>| {
-            let local_today = Local::today();
-            let now = NaiveDate::from_ymd(local_today.year(), local_today.month(), local_today.day());
-            let ts = match p.get("date") {
-                Some(date) => match date.parse::<NaiveDate>() {
-                    Ok(parsed_date) => parsed_date,
-                    _ => now,
-                },
-                None => now,
-            };
+            let ts = determine_date(p.get("date"));
             match rotd::handler(ts) {
                 Ok(rule) => warp::reply::json(&rule),
                 Err(status_code) => {
@@ -35,12 +42,6 @@ async fn main() {
                 },
             }
         });
-        /*
-        .map(|p: HashMap<String, String>| match p.get("name") {
-            Some(name) => Response::builder().body(format!("Hello, {}. This HTTP triggered function executed successfully.", name)),
-            None => Response::builder().body(String::from("This HTTP triggered function executed successfully. Pass a name in the query string for a personalized response.")),
-        });
-        */
 
     let port_key = "FUNCTIONS_CUSTOMHANDLER_PORT";
     let port: u16 = match env::var(port_key) {
