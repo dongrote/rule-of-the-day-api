@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-#[derive(Serialize)]
+#[derive(Serialize, Default)]
 pub struct RuleForLife {
     pub text: String,
     pub number: u32,

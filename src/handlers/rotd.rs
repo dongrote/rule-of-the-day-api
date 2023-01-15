@@ -1,7 +1,7 @@
 use chrono::NaiveDate;
 use crate::models::RulesForLifeCollection;
 use crate::types::RuleForLife;
-use crate::traits::RuleOfTheDay;
+use crate::traits::rotd::RuleOfTheDay;
 
 pub fn handler(timestamp: NaiveDate) -> Result<RuleForLife, warp::http::StatusCode> {
     let collection = RulesForLifeCollection::new();

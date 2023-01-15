@@ -2,7 +2,7 @@ use chrono::{NaiveDate, Datelike};
 use rand::prelude::*;
 use rand_chacha::ChaCha8Rng;
 use crate::types::RuleForLife;
-use crate::traits::RuleOfTheDay;
+use crate::traits::rotd::RuleOfTheDay;
 
 pub struct RulesForLifeCollection {
     rules_for_life: Vec<RuleForLife>,

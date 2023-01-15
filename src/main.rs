@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::env;
 use std::net::Ipv4Addr;
 use warp::Filter;
+mod providers;
 mod handlers;
 mod models;
 mod types;
